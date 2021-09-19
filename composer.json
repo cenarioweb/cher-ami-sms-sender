@@ -1,0 +1,27 @@
+{
+    "name": "cenarioweb/cher-ami-sms-sender",
+    "description": "Envios de sms atraves dos principais provedores nacionais",
+    "type": "library",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=5.6.0",
+        "guzzlehttp/guzzle": "^6.2",
+        "illuminate/support": "^5|^6|^7|^8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "CenarioWeb\\CherAmi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Carlos Eduardo",
+            "email": "carloseduardo@cenarioweb.com.br"
+        }
+    ]
+}
