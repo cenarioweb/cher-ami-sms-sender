@@ -3,11 +3,14 @@
 namespace CenarioWeb\CherAmi\Clients;
 
 use CenarioWeb\CherAmi\AbstractClient;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Config;
 
 class BestVoiceTelecom extends AbstractClient
 {
+    protected $credentials = [];
+
     /**
 	 * Provider API base url
 	 *
@@ -25,33 +28,52 @@ class BestVoiceTelecom extends AbstractClient
         return 0;
     }
 
+    public function setCredentials(array $credentials)
+    {
+        $this->credentials = [
+            'usuario' => $credentials['usuario'],
+            'chave' => $credentials['chave']
+        ];
+
+        return $this;
+    }
+
     /**
      * Função para enviar um SMS de cada vez
      *
-     * @param array $data
+     * @param string $numero
+     * @param string $mensagem
+     * @param string|null $mensagemId
      * @return array
      */
-    public function sendSMS(array $data): array
+    public function sendSMS(string $numero, string $mensagem, string $mensagemId = null): array
     {
         $client = new Client([
-            'base_url' => config('sms.bvtelecom.baseUrl'),
+            'base_uri' => 'https://apishort.bestvoice.com.br/bot/',
             'timeout'  => 4.2,
             'headers' => [
-                'usuario' => config('sms.bvtelecom.usuario'),
-                'chave' => config('sms.bvtelecom.chave')
+                'usuario' => $this->credentials['usuario'],
+                'chave' => $this->credentials['chave']
             ]
         ]);
 
-        $response = $client->request('POST', '', [
+        $response = $client->request('POST', 'single-sms.php', [
             'json' => [
-                'celular' => $data['numero'],
-                'mensagem' => $data['mensagem']
+                'celular' => $numero,
+                'mensagem' => $mensagem,
+                'parceiroId' => $mensagemId
             ]
         ]);
 
         $body = $response->getBody();
 
-        return collect($body)->toArray();
+        $content = json_decode($body->getContents());
+
+        if (isset($content->status)) {
+            throw new Exception($content->statusDetalhe, $content->status);
+        }
+
+        return collect($content)->toArray();
     }
 
     /**
@@ -62,6 +84,25 @@ class BestVoiceTelecom extends AbstractClient
      */
     public function sendMultipleSMS(array $data): array
     {
-        return [];
+        $client = new Client([
+            'base_uri' => 'https://apishort.bestvoice.com.br/bot/',
+            'timeout'  => 4.2,
+            'headers' => [
+                'usuario' => $this->credentials['usuario'],
+                'chave' => $this->credentials['chave']
+            ]
+        ]);
+
+        $response = $client->request('POST', 'bulk-sms.php', [
+            'json' => [
+                'bulk' => $data
+            ]
+        ]);
+
+        $body = $response->getBody();
+
+        $content = json_decode($body->getContents());
+
+        return collect($content)->toArray();
     }
 }

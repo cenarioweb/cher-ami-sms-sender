@@ -6,20 +6,20 @@ use CenarioWeb\CherAmi\Exceptions\InvalidProviderException;
 
 class FactoryClient
 {
-    protected $clients = [
-        'bvtelecom'  => \CenarioWeb\CherAmi\Clients\BestVoiceTelecom::class,
-        'kingsms' => \CenarioWeb\CherAmi\Clients\KingSms::class,
-        'mobizon' => \CenarioWeb\CherAmi\Clients\Mobizon::class,
-        'smsdev' => \CenarioWeb\CherAmi\Clients\SmsDev::class,
-        'zenvia' => \CenarioWeb\CherAmi\Clients\Zenvia::class
+    protected $services = [
+        'bvtelecom'  => \CenarioWeb\CherAmi\Clients\BestVoiceTelecom::class
+        // 'kingsms' => \CenarioWeb\CherAmi\Clients\KingSms::class,
+        // 'mobizon' => \CenarioWeb\CherAmi\Clients\Mobizon::class,
+        // 'smsdev' => \CenarioWeb\CherAmi\Clients\SmsDev::class,
+        // 'zenvia' => \CenarioWeb\CherAmi\Clients\Zenvia::class
     ];
 
     protected $config = [];
 
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
+    // public function __construct(array $config)
+    // {
+    //     $this->config = $config;
+    // }
 
     public function get($name)
     {
