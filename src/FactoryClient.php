@@ -7,10 +7,10 @@ use CenarioWeb\CherAmi\Exceptions\InvalidProviderException;
 class FactoryClient
 {
     protected $services = [
-        'bvtelecom' => [
-            'name' => 'Best Voice Telecom',
-            'class' => \CenarioWeb\CherAmi\Clients\BestVoiceTelecom::class
-        ],
+        // 'bvtelecom' => [
+        //     'name' => 'Best Voice Telecom',
+        //     'class' => \CenarioWeb\CherAmi\Clients\BestVoiceTelecom::class
+        // ],
         'infobip' => [
             'name' => 'Infobip',
             'class' => \CenarioWeb\CherAmi\Clients\Infobip::class

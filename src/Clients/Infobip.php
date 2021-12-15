@@ -56,22 +56,33 @@ class Infobip extends AbstractClient
             ]
         ]);
 
-        $response = $client->request('POST', 'sms/1/text/single', [
-            'form_params' => [
-                'to' => $numero,
-                'text' => $mensagem
-            ]
-        ]);
+        try {
+            $response = $client->request('POST', 'sms/1/text/single', [
+                'form_params' => [
+                    'to' => $numero,
+                    'text' => $mensagem
+                ]
+            ]);
 
-        $body = $response->getBody();
+            if ($response->getStatusCode() == 200) {
+                return [
+                    'success' => true,
+                    'message' => 'Message sent successfully'
+                ];
+            }
 
-        $content = json_decode($body->getContents());
-
-        if (isset($content->status)) {
-            throw new Exception($content->statusDetalhe, $content->status);
+            if ($response->getStatusCode() == 401) {
+                return [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
-
-        return collect($content)->toArray();
     }
 
     /**
@@ -99,10 +110,18 @@ class Infobip extends AbstractClient
             ]);
         }
 
-        $body = $response->getBody();
+        $statusCode = $response->getStatusCode();
 
-        $content = json_decode($body->getContents());
+        if ($statusCode == 200) {
+            return [
+                'success' => true,
+                'message' => 'Messages sent successfully'
+            ];
+        }
 
-        return collect($content)->toArray();
+        return [
+            'success' => false,
+            'message' => 'Unknown error (' . $statusCode . ')'
+        ];
     }
 }
