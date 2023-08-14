@@ -31,7 +31,7 @@ class FactoryClient
 
         $client = $this->services[$name]['class'];
 
-        return new $client($this->config[$name]['class']);
+        return new $client($this->services[$name]['class']);
     }
 
     public function listServices()
